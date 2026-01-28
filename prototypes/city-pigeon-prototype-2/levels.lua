@@ -2,8 +2,9 @@ local tileSystem = require("tileSystem")
 local constants = require("constants")
 
 local levelOne = tileSystem.tileMap:new()
-levelOne:newMap(10, 10)
+levelOne:newGrid(10, 10)
 
+-- function used to initialize the world for level one, so tiles are properly generated
 function levelOne:initialize(world)
     self.world = world
     self.tiles = {

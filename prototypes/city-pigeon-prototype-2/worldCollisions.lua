@@ -1,5 +1,8 @@
 local collisionBehavior = require("collisionBehavior")
 
+-- these functions run collision behavior
+-- used as callback functions in world physics
+
 local function beginContact(collisionOne, collisionTwo, contact)
   collisionBehavior.playerGroundedBehavior(collisionOne, collisionTwo, true)
   collisionBehavior.playerWindBehavior(collisionOne, collisionTwo, true)

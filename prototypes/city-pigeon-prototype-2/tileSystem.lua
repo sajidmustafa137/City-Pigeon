@@ -1,5 +1,6 @@
 local constants = require("constants")
 
+-- function creates a new tile with coordinates, graphics, physics, and initialize behavior
 local function newTile(name, tileImage, gridX, gridY, world, initialize)
     local graphics = love.graphics.newImage(tileImage)
 
@@ -29,20 +30,24 @@ local function newTile(name, tileImage, gridX, gridY, world, initialize)
     }
 end
 
+-- returns the coordinates of the specific point defined on grid
 local function tilePos(gridX, gridY)
     return {gridX*constants.UNIT, gridY*constants.UNIT}
 end
 
+-- tile map class
 local tileMap = {
     grid = {},
     tiles = {}
 }
 
+-- create new tile map
 function tileMap:new()
     return tileMap
 end
 
-function tileMap:newMap(rows, columns)
+-- create a new empty grid for tile map
+function tileMap:newGrid(rows, columns)
     local grid = {}
     
     for row = 1, rows do
@@ -56,6 +61,7 @@ function tileMap:newMap(rows, columns)
     self.grid = grid
 end
 
+-- add list of tiles to the current grid
 function tileMap:addTiles(tiles)
     local newGrid = self.grid
     
@@ -69,6 +75,7 @@ function tileMap:addTiles(tiles)
     self.grid = newGrid
 end
 
+-- display the tile map onto the window
 function tileMap:draw()
     for rows, row in ipairs(self.grid) do
         for column=1, #row do

@@ -1,6 +1,10 @@
 local constants = require("constants")
 local tileSystem = require("tileSystem")
 
+-- initialize player with values for coordinates, velocity, velocity change, dimensions,
+-- grounded and flying status
+-- wind vector to apply to player when touching wind
+-- + collision behavior
 local player = {
   x = tileSystem.tilePos(1, 8)[1],
   y = tileSystem.tilePos(1, 8)[2],
@@ -16,7 +20,6 @@ local player = {
 
   grounded = false,
   flying = false,
-  glide = false,
 
   windVector = {0, 0},
 
@@ -29,6 +32,10 @@ local player = {
   },
 }
 
+-- initialize player physics: player dynamic body values + player grounded sensor.
+-- set some physic behavior to make player behave properly
+-- initialize player position
+-- attach user data to player fixtures for collision detection
 function player:initialize(world)
     self.body = love.physics.newBody(world, 0, 0, "dynamic")
     self.shape = love.physics.newRectangleShape(self.width/2, self.height/2, self.width, self.height)
@@ -39,6 +46,7 @@ function player:initialize(world)
 
     self.body:setFixedRotation(true)
     self.body:setLinearDamping(1)
+
     self.body:setX(self.x)
     self.body:setY(self.y)
 
@@ -48,19 +56,24 @@ function player:initialize(world)
     self.groundedSensorFixture:setUserData("playerGrounded")
 end
 
+-- update player values
+-- run other player functions
+-- apply forces to player based on values
 function player:update()
     self.x, self.y = self.body:getPosition()
     self.vx, self.vy = self.body:getLinearVelocity()
 
-    player:updateGrounded()
-    player:updateWind()
-    player:updateFly()
-    player:movement()
+    self:updateGrounded()
+    self:updateWind()
+    self:updateFly()
+    self:movement()
 
     self.body:applyLinearImpulse(self.dx, self.dy)
     self.dx, self.dy = 0, 0
 end
 
+-- function that handles all the general movement of player
+-- jumping, move left, move right, and flying
 function player:movement()
     local fly = love.keyboard.isDown("space")
     local jump = love.keyboard.isDown({"w", "up"})
@@ -83,6 +96,7 @@ function player:movement()
     end
 end
 
+-- update grounded status based on collision behavior
 function player:updateGrounded()
     if self.collisionBehavior.beginContactGrounded then
         self.grounded = true
@@ -91,6 +105,8 @@ function player:updateGrounded()
     end
 end
 
+-- update wind vectors based on collision behavior
+-- apply wind vectors to player
 function player:updateWind()
     if self.collisionBehavior.beginContactWind then
         self.windVector = {0, -32}
@@ -101,6 +117,8 @@ function player:updateWind()
     self.dy = self.windVector[2]
 end
 
+-- update fly status based on whether player is grounded or not
+-- update the gravity based on fly status
 function player:updateFly()
     if self.grounded then
         self.flying = false
@@ -113,6 +131,7 @@ function player:updateFly()
     end
 end
 
+-- function to display player graphics
 function player:draw()
     love.graphics.setColor(0,0,1)
     love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)

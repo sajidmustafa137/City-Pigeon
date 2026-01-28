@@ -1,5 +1,6 @@
 local player = require("player")
 
+-- function that returns whether two fixtures are colliding or no
 local function collisionBetween(fixtureOneName, fixtureTwoName, fixtureOne, fixtureTwo)
     local isFixtureOneColliding = (fixtureOneName == fixtureOne:getUserData()) or (fixtureOneName == fixtureTwo:getUserData())
     local isFixtureTwoColliding = (fixtureTwoName == fixtureOne:getUserData()) or (fixtureTwoName == fixtureTwo:getUserData())
@@ -12,6 +13,7 @@ local function playerWindBehavior(collisionOne, collisionTwo, windBool)
     return nil
   end
 
+  -- set wind collision behavior
   if windBool then
     player.collisionBehavior.beginContactWind = true
     player.collisionBehavior.endContactWind = false
@@ -26,6 +28,7 @@ local function playerGroundedBehavior(collisionOne, collisionTwo, groundedBool)
     return nil
   end
 
+  -- set grounded collision behavior
   if groundedBool then
     player.collisionBehavior.beginContactGrounded = true
     player.collisionBehavior.endContactGrounded = false
@@ -40,6 +43,7 @@ local function playerFinishBehavior(collisionOne, collisionTwo)
     return nil
   end
 
+  -- run level end behavior when player touches the finish
   levelEnd()
 end
 
